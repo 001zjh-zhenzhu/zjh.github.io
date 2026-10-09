@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft 系列游戏导航 | 下载 · 介绍 · 购买</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --bg-2: #0f1524;
+      --card: #131b2e;
+      --card-hover: #182238;
+      --border: #1e2b45;
+      --green: #6ee34a;
+      --green-dark: #4caf2a;
+      --green-glow: rgba(110, 227, 74, 0.25);
+      --text: #e6ecf5;
+      --text-dim: #8b9ab5;
+      --text-faint: #5a6884;
+      --red: #ff6b6b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* 背景装饰 */
+    .bg-decor {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-decor::before {
+      content: "";
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1200px;
+      height: 800px;
+      background: radial-gradient(ellipse, rgba(110, 227, 74, 0.08) 0%, transparent 65%);
+      filter: blur(40px);
+    }
+
+    .bg-decor::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(110, 227, 74, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(110, 227, 74, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 0%, black 20%, transparent 75%);
+    }
+
+    /* ===== 顶部导航 ===== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(10, 14, 23, 0.75);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+    .nav-logo .cube {
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      border-radius: 3px;
+      box-shadow: 0 0 14px var(--green-glow);
+      position: relative;
+    }
+
+    .nav-logo .cube::after {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      background: var(--bg);
+      border-radius: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a:hover {
+      color: var(--green);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--green);
+      transition: width 0.25s;
+      border-radius: 2px;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* ===== Hero ===== */
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 90px 24px 70px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(110, 227, 74, 0.08);
+      border: 1px solid rgba(110, 227, 74, 0.25);
+      color: var(--green);
+      padding: 7px 18px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    header h1 .accent {
+      background: linear-gradient(135deg, var(--green) 0%, #a8f57c 50%, var(--green) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+    }
+
+    header h1 .pixel {
+      font-family: "Press Start 2P", monospace;
+      font-size: 0.55em;
+      display: inline-block;
+      transform: translateY(-4px);
+      margin-right: 4px;
+    }
+
+    header .subtitle {
+      color: var(--text-dim);
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      max-width: 560px;
+      margin: 0 auto 38px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 28px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: all 0.22s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #07120a;
+      box-shadow: 0 6px 24px rgba(110, 227, 74, 0.28);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(110, 227, 74, 0.42);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: var(--green);
+      color: var(--green);
+      transform: translateY(-2px);
+    }
+
+    /* ===== 容器 ===== */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== 区块标题 ===== */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 34px;
+    }
+
+    .section-head .num {
+      font-family: "Press Start 2P", monospace;
+      font-size: 0.7rem;
+      color: var(--green);
+      opacity: 0.6;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .section-head .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    section {
+      padding: 40px 0;
+    }
+
+    /* ===== 下载卡片 ===== */
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .dl-card {
+      position: relative;
+      background: linear-gradient(160deg, var(--card) 0%, var(--bg-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dl-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .dl-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(110, 227, 74, 0.4);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(110, 227, 74, 0.1);
+    }
+
+    .dl-card:hover::before {
+      opacity: 1;
+    }
+
+    .dl-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 18px;
+      background: rgba(110, 227, 74, 0.1);
+      border: 1px solid rgba(110, 227, 74, 0.2);
+    }
+
+    .dl-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .dl-card p {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      line-height: 1.65;
+      margin-bottom: 20px;
+      min-height: 62px;
+    }
+
+    .dl-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: gap 0.2s;
+    }
+
+    .dl-link:hover {
+      gap: 11px;
+    }
+
+    .dl-link svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* ===== 游戏列表 ===== */
+    .game-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .game {
+      position: relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 26px;
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .game::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--green);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s;
+    }
+
+    .game:hover {
+      background: var(--card-hover);
+      border-color: rgba(110, 227, 74, 0.3);
+      transform: translateX(4px);
+    }
+
+    .game:hover::before {
+      transform: scaleY(1);
+    }
+
+    .game-head {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .game-head h3 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .game p.desc {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 11px;
+      border-radius: 100px;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .tag-green {
+      background: rgba(110, 227, 74, 0.12);
+      color: var(--green);
+      border: 1px solid rgba(110, 227, 74, 0.25);
+    }
+
+    .tag-red {
+      background: rgba(255, 107, 107, 0.1);
+      color: var(--red);
+      border: 1px solid rgba(255, 107, 107, 0.25);
+    }
+
+    .tag-blue {
+      background: rgba(90, 160, 255, 0.1);
+      color: #7ab3ff;
+      border: 1px solid rgba(90, 160, 255, 0.25);
+    }
+
+    .buy-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .buy-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      padding: 7px 15px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .buy-links a:hover {
+      background: rgba(110, 227, 74, 0.1);
+      border-color: var(--green);
+      color: var(--green);
+      transform: translateY(-1px);
+    }
+
+    .buy-links a svg {
+      width: 13px;
+      height: 13px;
+      opacity: 0.7;
+    }
+
+    .buy-links a:hover svg {
+      opacity: 1;
+    }
+
+    .buy-links .none {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-faint);
+      font-size: 0.8rem;
+      font-style: italic;
+      padding: 7px 4px;
+    }
+
+    /* ===== 页脚 ===== */
+    footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 60px;
+      padding: 44px 24px 40px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .footer-logo .cube {
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .footer-logo .cube::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      background: var(--bg);
+      border-radius: 1px;
+    }
+
+    footer .meta {
+      color: var(--text-faint);
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+
+    footer a.home {
+      color: var(--green);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    footer a.home:hover {
+      opacity: 0.75;
+    }
+
+    /* ===== 滚动动画 ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: revealUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes revealUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      header { padding: 60px 20px 50px; }
+      .container { padding: 0 18px; }
+      .section-head h2 { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-decor"></div>
+
+  <!-- 导航栏 -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="cube"></span>
+        Minecraft Hub
+      </div>
+      <div class="nav-links">
+        <a href="#download">下载</a>
+        <a href="#games">系列游戏</a>
+        <a href="https://io.codehero.store/user/8526" target="_blank" rel="noopener">主页</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header>
+    <div class="hero-badge">
+      <span class="dot"></span>
+      全系列游戏导航 · 持续更新
+    </div>
+    <h1>
+      <span class="pixel">⛏</span>探索<br>
+      <span class="accent">Minecraft 宇宙</span>
+    </h1>
+    <p class="subtitle">
+      从沙盒建造到地下城冒险，从即时战略到 AR 探索——一站式了解 Minecraft 全系列作品与官方下载、购买渠道。
+    </p>
+    <div class="hero-actions">
+      <a href="#download" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        前往下载
+      </a>
+      <a href="#games" class="btn btn-ghost">浏览系列作品 →</a>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- 下载专区 -->
+    <section id="download" class="reveal">
+      <div class="section-head">
+        <span class="num">01</span>
+        <h2>📥 下载专区</h2>
+        <span class="line"></span>
+      </div>
+
+      <div class="download-grid">
+
+        <div class="dl-card">
+          <div class="dl-icon">🟩</div>
+          <h3>网易版（中国版）</h3>
+          <p>Minecraft 中国官方合作伙伴，面向中国玩家免费提供。支持端游与手游，基岩互通版已开启测试。</p>
+          <a class="dl-link" href="https://mc.163.com/" target="_blank" rel="noopener">
+            前往下载
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <div class="dl-card">
+          <div class="dl-icon">🌐</div>
+          <h3>Minecraft 官网</h3>
+          <p>访问 minecraft.com，下载 Minecraft 启动器，获取 Java 版与 Bedrock 版的最新更新内容。</p>
+          <a class="dl-link" href="https://www.minecraft.com/" target="_blank" rel="noopener">
+            前往官网
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <div class="dl-card">
+          <div class="dl-icon">🪟</div>
+          <h3>Microsoft Store 版</h3>
+          <p>Java &amp; Bedrock 合集，通过 Microsoft 账号获取。登录后点击“获取”即可安装启动器并开始游玩。</p>
+          <a class="dl-link" href="https://aka.ms/JavaBedrockEdition" target="_blank" rel="noopener">
+            前往下载
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+        <div class="dl-card">
+          <div class="dl-icon">⚔️</div>
+          <h3>Minecraft Dungeons II</h3>
+          <p>系列最新续作，2026 年 9 月 29 日发售。登陆 PC、Xbox、PS5、Switch 及 Switch 2，支持跨平台联机。</p>
+          <a class="dl-link" href="https://store.steampowered.com/app/1912410/Minecraft_Dungeons_II/" target="_blank" rel="noopener">
+            前往 Steam
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 系列游戏 -->
+    <section id="games" class="reveal">
+      <div class="section-head">
+        <span class="num">02</span>
+        <h2>🎮 系列游戏一览</h2>
+        <span class="line"></span>
+      </div>
+
+      <div class="game-list">
+
+        <div class="game">
+          <div class="game-head">
+            <h3>Minecraft（Java 版 / Bedrock 版）</h3>
+            <span class="tag tag-green">沙盒建造</span>
+          </div>
+          <p class="desc">系列核心作品。Java 版以模组生态与自定义服务器闻名，Bedrock 版支持跨平台联机，覆盖 Windows、主机与移动端。</p>
+          <div class="buy-links">
+            <a href="https://www.minecraft.net/download" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Minecraft 官网
+            </a>
+            <a href="https://aka.ms/JavaBedrockEdition" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+              Microsoft Store
+            </a>
+            <a href="https://mc.163.com/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              网易版
+            </a>
+          </div>
+        </div>
+
+        <div class="game">
+          <div class="game-head">
+            <h3>Minecraft Dungeons</h3>
+            <span class="tag tag-green">动作 RPG</span>
+          </div>
+          <p class="desc">地下城探索玩法，战斗、寻宝、收集传奇装备。支持合作模式，终极版包含全部 DLC，2021 年 9 月登陆 Steam。</p>
+          <div class="buy-links">
+            <a href="https://store.steampowered.com/app/1672970/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.98 2C6.5 2 2 6.2 2 11.5c0 4.5 3.1 8.3 7.4 9.5l1.6-3.1c-.3-.2-.6-.4-.8-.7-.9-1.1-.9-2.8.1-3.9.6-.7 1.5-1.1 2.4-1.1.3 0 .5 0 .8.1l2.6-3.8c0-.2.1-.4.1-.6 0-1.6 1.3-2.9 2.9-2.9.5 0 .9.1 1.3.3C19.4 4 15.9 2 11.98 2zM8.6 15.3l-1.1.5c.2.5.6 1 1.1 1.3.6.3 1.2.4 1.9.2l1.3-.5c1.1-.5 1.6-1.8 1.1-2.9-.5-1.1-1.8-1.6-2.9-1.1l-1.3.5c-.3.1-.5.1-.8 0-.2-.1-.4-.3-.5-.5-.3-.6 0-1.3.6-1.6.2-.1.4-.1.6-.1.3 0 .5.1.7.2l1.1-.5c-.3-.4-.7-.7-1.2-.9-1.6-.6-3.4.2-4 1.8-.6 1.6.2 3.4 1.8 4l1.3.6zM18.7 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+              Steam
+            </a>
+            <a href="https://www.xbox.com/zh-CN/games/store/minecraft-dungeons/9pck0rs4v3j4" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+              Microsoft Store
+            </a>
+          </div>
+        </div>
+
+        <div class="game">
+          <div class="game-head">
+            <h3>Minecraft Dungeons II</h3>
+            <span class="tag tag-green">动作 RPG</span>
+            <span class="tag tag-blue">最新</span>
+          </div>
+          <p class="desc">系列最新续作，2026 年 9 月 29 日发售。闯过裂隙探索全新维度「汐浮」，支持最多四人同屏或在线合作。Steam 标准版 148 元，豪华版 248 元。</p>
+          <div class="buy-links">
+            <a href="https://store.steampowered.com/app/1912410/Minecraft_Dungeons_II/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.98 2C6.5 2 2 6.2 2 11.5c0 4.5 3.1 8.3 7.4 9.5l1.6-3.1c-.3-.2-.6-.4-.8-.7-.9-1.1-.9-2.8.1-3.9.6-.7 1.5-1.1 2.4-1.1.3 0 .5 0 .8.1l2.6-3.8c0-.2.1-.4.1-.6 0-1.6 1.3-2.9 2.9-2.9.5 0 .9.1 1.3.3C19.4 4 15.9 2 11.98 2zM8.6 15.3l-1.1.5c.2.5.6 1 1.1 1.3.6.3 1.2.4 1.9.2l1.3-.5c1.1-.5 1.6-1.8 1.1-2.9-.5-1.1-1.8-1.6-2.9-1.1l-1.3.5c-.3.1-.5.1-.8 0-.2-.1-.4-.3-.5-.5-.3-.6 0-1.3.6-1.6.2-.1.4-.1.6-.1.3 0 .5.1.7.2l1.1-.5c-.3-.4-.7-.7-1.2-.9-1.6-.6-3.4.2-4 1.8-.6 1.6.2 3.4 1.8 4l1.3.6zM18.7 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+              Steam
+            </a>
+            <a href="https://www.xbox.com/zh-CN/games/store/minecraft-dungeons-ii/9pm3j18qm4q3" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+              Microsoft Store
+            </a>
+          </div>
+        </div>
+
+        <div class="game">
+          <div class="game-head">
+            <h3>Minecraft Legends</h3>
+            <span class="tag tag-green">即时战略</span>
+          </div>
+          <p class="desc">以策略玩法为主，揭开 Minecraft 宇宙中的史诗传奇。2023 年 4 月 18 日发售，登陆 PC、Xbox、PlayStation 和 Nintendo Switch 平台。</p>
+          <div class="buy-links">
+            <a href="https://store.steampowered.com/app/1928870/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.98 2C6.5 2 2 6.2 2 11.5c0 4.5 3.1 8.3 7.4 9.5l1.6-3.1c-.3-.2-.6-.4-.8-.7-.9-1.1-.9-2.8.1-3.9.6-.7 1.5-1.1 2.4-1.1.3 0 .5 0 .8.1l2.6-3.8c0-.2.1-.4.1-.6 0-1.6 1.3-2.9 2.9-2.9.5 0 .9.1 1.3.3C19.4 4 15.9 2 11.98 2zM8.6 15.3l-1.1.5c.2.5.6 1 1.1 1.3.6.3 1.2.4 1.9.2l1.3-.5c1.1-.5 1.6-1.8 1.1-2.9-.5-1.1-1.8-1.6-2.9-1.1l-1.3.5c-.3.1-.5.1-.8 0-.2-.1-.4-.3-.5-.5-.3-.6 0-1.3.6-1.6.2-.1.4-.1.6-.1.3 0 .5.1.7.2l1.1-.5c-.3-.4-.7-.7-1.2-.9-1.6-.6-3.4.2-4 1.8-.6 1.6.2 3.4 1.8 4l1.3.6zM18.7 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+              Steam
+            </a>
+            <a href="https://www.xbox.com/zh-CN/games/store/minecraft-legends/9mv69l4jsd31" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+              Microsoft Store
+            </a>
+          </div>
+        </div>
+
+        <div class="game">
+          <div class="game-head">
+            <h3>Minecraft: Story Mode</h3>
+            <span class="tag tag-red">已停售</span>
+            <span class="tag tag-green">剧情冒险</span>
+          </div>
+          <p class="desc">由 Telltale Games 合作开发，共两季。扮演 Jesse 踏上寻找「石之秩序」的旅程。因 Telltale 关闭，已停止数字版销售，无法通过官方渠道购买。</p>
+          <div class="buy-links">
+            <span class="none">— 暂无官方购买渠道 —</span>
+          </div>
+        </div>
+
+        <div class="game">
+          <div class="game-head">
+            <h3>Minecraft Earth</h3>
+            <span class="tag tag-red">已停运</span>
+            <span class="tag tag-green">AR 手游</span>
+          </div>
+          <p class="desc">增强现实版本，类似 Pokémon GO。曾在 iOS / Android 提供早期访问，现已停止运营，无法下载或购买。</p>
+          <div class="buy-links">
+            <span class="none">— 暂无官方购买渠道 —</span>
+          </div>
+        </div>
+
+        <div class="game">
+          <div class="game-head">
+            <h3>Minecraft: Education Edition</h3>
+            <span class="tag tag-green">教育</span>
+          </div>
+          <p class="desc">面向学校与组织的教育平台，通过游戏激发创造性学习。支持 Windows、Mac、iPad、Chromebook 和移动设备。需拥有 Microsoft 365 账号才能购买。</p>
+          <div class="buy-links">
+            <a href="https://education.minecraft.net/licensing" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              官方购买页面
+            </a>
+          </div>
+        </div>
+
+        <div class="game">
+          <div class="game-head">
+            <h3>Minecraft 树莓派版</h3>
+            <span class="tag tag-red">已停更</span>
+            <span class="tag tag-green">编程教育</span>
+          </div>
+          <p class="desc">专为树莓派打造的简化版，用于教授编程概念，已不再持续更新，无法通过官方渠道购买。</p>
+          <div class="buy-links">
+            <span class="none">— 暂无官方购买渠道 —</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 页脚 -->
+  <footer>
+    <div class="footer-logo">
+      <span class="cube"></span>
+      Minecraft Hub
+    </div>
+    <p class="meta">Minecraft 系列游戏导航 · 托管于 GitHub Pages</p>
+    <a class="home" href="https://io.codehero.store/user/8526" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      https://io.codehero.store/user/8526
+    </a>
+  </footer>
+
+  <script>
+    // 滚动进入视口时触发动画
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = "revealUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards";
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll("section, .game, .dl-card").forEach((el, i) => {
+      el.style.opacity = "0";
+      el.style.animationDelay = `${i * 0.04}s`;
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
